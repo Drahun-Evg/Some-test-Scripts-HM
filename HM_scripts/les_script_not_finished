@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#path1=/home/devops/lessons123/
+
+info="du -h /home/devops/lessons123"
+
+#echo it is size directories - "$info"
+
+watch -n 10 -d "$info"
+
+cp /home/devops/lab_2a /home/devops/lessons123/test1

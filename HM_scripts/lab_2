@@ -1,0 +1,7 @@
+#!/bin/bash
+
+read -p "enter string name - " name
+
+date=`date '+%H_%M_%S'`
+
+sudo find /home/devops/HM_scripts/ -type f -name "*.txt" | xargs tar czf "$name_$date".tar.gz

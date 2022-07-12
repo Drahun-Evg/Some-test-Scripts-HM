@@ -1,0 +1,87 @@
+#!/bin/bash
+
+echo -e "\033[46m - NOW I START INSTALLATION: APACHE2, MARIADB, PHP7.4, PHP8, WORDPRESS."
+
+#/etc/apache2/sites-available/testsite.conf
+#ServerName=testsite.ru
+#ServerAlias=www.testsite.ru
+#ServerAdmin=user1@localhost
+#DocumentRoot /var/www/html/testsite.ru
+#ErrorLog=${APACHE_LOG_DIR}/error.log
+#CustomLog=${APACHE_LOG_DIR}/access.log combined
+
+sudo apt update
+
+#1)install apache2
+echo -e "\033[46m - starting install apache2."
+sudo apt install apache2 apache2-utils
+sudo systemctl enable apache2
+sudo systemctl start apache2
+apache -v
+echo -e "\033[46m - ending install apache2."
+
+sudo apt uptade
+
+#2) install mariabd-server
+echo -e "\033[46m - starting install mariadb."
+sudo apt install mariadb-server
+sudo systemctl enable mariadb
+sudo systemctl start mariadb
+mariadb -v
+echo -e "\033[46m - ending install mariadb."
+#next point Secure installation MySQL server
+echo -e "\033[42m - Next step you need enter for all rquirements: y"
+
+sudo mysql_secure_installation
+
+sudo apt update
+
+#3) Installation PHP7.4, PHP8
+echo -e "\033[46m - starting unstall PHP."
+sudo apt -y install php7.4
+sudo apt -y install php7.4 php7.4-mysql libapache2-mod-php7.4 php7.4-cli php7.4-cgi php7.4-gd
+sudo apt -y install  lsb-release ca-certificates apt-transport-https software-properties-common gnupg2
+echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/sury-php.list
+wget -qO - https://packages.sury.org/php/apt.gpg | sudo apt-key add -
+sudo apt update
+apt -y install php8.0
+sudo apt -y install php8.1
+php7.4 -v
+php8.1 -v
+#settings PHP for apache
+sudo apt -y install libapache2-mod-php7.4
+sudo apt -y install libapache2-mod-php8.0
+sudo apt -y install libapache2-mod-php8.1
+sudo a2enmod php7.4
+sudo systemctl restart apache2
+sudo a2enmod rewrite
+sudo a2enmod php8.1
+sudo systemctl restart apache2
+echo -e "\033[46m - ending install PHP."
+
+sudo apt update
+
+#test PHP and apache
+echo -e "\033[46m - Test PHP --- create php file."
+echo "<?php phpinfo(); ?>" > /var/www/html/info.php
+#lynx http://localhost
+#lynx http://localhost/info.php
+
+#4) Intallation wordpress
+echo start instalation wordpress
+wget -c http://wordpress.org/latest.tar.gz
+tar -xzvf latest.tar.gz
+sudo rsync -av wordpress/* /var/www/html/
+sudo chown -R www-data:www-data /var/www/html/
+sudo chmod -R 755 /var/www/html/
+
+#5) Create database
+echo "\033[33m mysql--- CREATE DATABASE wp_database;"
+echo "\033[33m mysql---  CREATE USER 'wp_user'@'localhost' IDENTIFIED BY 'password';"
+echo "\033[33m mysql--- GRANT ALL PRIVILEGES ON wp_database.* TO 'wp_user'@'localhost';"
+echo "\033[33m mysql--- FLUSH PRIVILEGES;"
+echo "\033[33m mysql--- EXIT;"
+
+sudo mysql -u root -p
+
+

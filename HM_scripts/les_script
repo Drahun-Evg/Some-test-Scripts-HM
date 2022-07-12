@@ -1,0 +1,21 @@
+#!/bin/bash
+
+path1=/home/devops/lessons123/
+
+wes=$(find "$path1" -type f -print)
+
+while IFS= read -r line
+
+do
+
+bes=$(grep -rc "$line" -e "^$")
+
+if [ "$bes" -gt 5  ]
+
+then
+
+echo "$line" :  "$bes"
+
+fi
+
+done <<< "$wes"

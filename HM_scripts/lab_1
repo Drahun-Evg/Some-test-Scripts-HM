@@ -1,0 +1,16 @@
+#!/bin/bash
+
+summa=$[ "$1" + "$2" ]
+
+echo first arg is "$1"
+echo second arg is "$2"
+echo summa = "$summa"
+
+if [ "$summa" -gt 0 ]
+
+then
+	echo result : "$summa" more than 0
+else
+	echo result less than 0
+fi
+
